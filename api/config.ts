@@ -10,6 +10,6 @@ export const firebaseConfig = {
 };
 
 export const actionCodeSettings = {
-  url: `${process.env.API_URL}`,
+  url: `${process.env.CLIENT_URL}`,
   handleCodeInApp: true
 };

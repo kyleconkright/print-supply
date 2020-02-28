@@ -3,6 +3,7 @@ require('dotenv').config()
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as cors from 'cors';
+import * as fileUpload from 'express-fileupload';
 // import { corsOptions } from './utils/cors-options';
 
 import { Routes } from './routes';
@@ -16,13 +17,14 @@ class App {
   constructor() {
     this.app = express();
     this.config();
-    this.routes.routes(this.app);
+    this.routes.routes(this.app);    
   }
-
+  
   private config(): void {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: false }));
     this.app.use(cors());
+    this.app.use(fileUpload());
   }
 }
 

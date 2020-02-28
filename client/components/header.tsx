@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import styled from 'styled-components';
+import { Login } from './login';
 // import { theme } from './../styles/theme';
 // import Menu from './menu';
 
@@ -7,10 +8,7 @@ const StyledHeader = styled.header`
   padding: 1rem;
   display: flex;
   justify-content: space-between;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1;
+  align-items: center;
 `
 
 const Logo = styled.a`
@@ -24,6 +22,7 @@ const Header = () => (
     <Link href="/">
       <Logo>Shirt Upload</Logo>
     </Link>
+    <Login />
   </StyledHeader>
 );
 
