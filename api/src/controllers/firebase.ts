@@ -13,13 +13,6 @@ export class FirebaseClient {
     }
   }
   
-  async upload(file) {
-    try {
-      await uploadImage(file)
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
 
   async login(email: string) {
@@ -44,31 +37,47 @@ export class FirebaseClient {
     }
   }
 
+  async uploadImageToStorage (file: any) {
+    
+    const projectId = process.env.GOOGLE_PROJECT_ID;
+    const keyFilename = './../api/other-print-supply-1df0fa2b6e7c.json';
+    const storage = new Storage({ projectId, keyFilename });
+    const bucket = storage.bucket(process.env.GOOGLE_STORAGE_BUCKET);
+    let user;
+    
+    return await new Promise(async (resolve, reject) => {
+      if (!file) {
+        reject('No image file');
+      }
+      try {
+        user = await this.isLoggedIn();
+        if (!user) return reject('you must log in');
+      } catch(err) {
+        reject(err);
+        return;
+      }
+      const newFileName = `${Date.now()}__${file.originalname}`;
+      const fileUpload = bucket.file(`${user.uid}/${newFileName}`);
+  
+      const blobStream = fileUpload.createWriteStream({
+        gzip: true,
+        resumable: false,
+        metadata: {
+          contentType: file.mimetype
+        }
+      });
+  
+      blobStream.on('error', (error) => {
+        reject('Something is wrong! Unable to upload at the moment.');
+      });
+  
+      blobStream.on('finish', async () => {
+        const url = `https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`;
+        await fileUpload.makePublic();
+        resolve(url);
+      });
+  
+      blobStream.end(file.buffer);
+    });
+  }
 }
-
-// const projectId = process.env.GOOGLE_PROJECT_ID;
-// const keyFilename = './../api/other-print-supply-firebase-adminsdk-zahw7-332ad7ec65.json';
-// const storage = new Storage({ projectId, keyFilename });
-// const bucket = storage.bucket("other-print-supply.appspot.com");
-
-// export const uploadImage = (file) => new Promise((resolve, reject) => {
-//   const { originalname, mimetype, buffer } = file
-
-//   const blob = bucket.file(Date.now() + originalname);
-//   const blobStream = blob.createWriteStream({
-//     resumable: false,
-//     metadata: {
-//       contentType: mimetype
-//     }
-//   })
-//   blobStream.on('finish', () => {
-//     const publicUrl = format(
-//       `https://storage.googleapis.com/${bucket.name}/${blob.name}`
-//     )
-//     resolve(publicUrl)
-//   })
-//   .on('error', () => {
-//     reject(`Unable to upload image, something went wrong`)
-//   })
-//   .end(buffer)
-// })
