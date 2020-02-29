@@ -12,8 +12,6 @@ export class FirebaseClient {
       this.app = firebase.initializeApp(firebaseConfig);
     }
   }
-  
-
 
   async login(email: string) {
     return await firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings)
@@ -37,8 +35,7 @@ export class FirebaseClient {
     }
   }
 
-  async uploadImageToStorage (file: any) {
-    
+  async uploadImageToStorage(file: any) {
     const projectId = process.env.GOOGLE_PROJECT_ID;
     const keyFilename = './../api/other-print-supply-1df0fa2b6e7c.json';
     const storage = new Storage({ projectId, keyFilename });
@@ -79,5 +76,20 @@ export class FirebaseClient {
   
       blobStream.end(file.buffer);
     });
+  }
+
+  async getUploads() {
+    const projectId = process.env.GOOGLE_PROJECT_ID;
+    const keyFilename = './../api/other-print-supply-1df0fa2b6e7c.json';
+    const storage = new Storage({ projectId, keyFilename });
+    const bucket = storage.bucket(process.env.GOOGLE_STORAGE_BUCKET);
+    let user;
+
+    try {
+      user = await this.isLoggedIn();
+    } catch(err) {console.error(err)}
+
+    const files = await bucket.getFiles({prefix: `${user.uid}`});
+    return files;
   }
 }

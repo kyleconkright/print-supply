@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { FirebaseClient } from "./../controllers/firebase";
-import * as multer from "multer";
+import { multer, uploadFile, getUploads } from "./upload";
+import axios from 'axios';
+import * as btoa from 'btoa';
 
 const firebaseClient = new FirebaseClient()
 
@@ -44,21 +46,52 @@ export class Routes {
         console.log(err);
       }
     })
+    
+    app.post('/upload', multer.single('file'), uploadFile);
+    app.get('/uploads', getUploads);
 
-    const upload = multer({
-      storage: multer.memoryStorage(),
-      limits: {
-        fileSize: 5 * 1024 * 1024 // no larger than 5mb
+    app.post('/get-quote', async (req, res) => {
+      var username = 'user';
+      var password = process.env.SCALABLE_PRESS_KEY;
+
+      const body = {
+        type: 'screenprint',
+        sides: {
+          front: {
+            artwork: req.body.url,
+            resize: true,
+            aspect: 1.008371385083714,
+            dimensions: {
+              width: 5
+            },
+            position: {
+              horizontal: "C",
+              offset: {
+                top: 2.5
+              }
+            },
+            colors: [
+              "white"
+            ]
+          }
+        },
+        products: [
+          {
+            id: 'gildan-sweatshirt-crew',
+            color: 'ash',
+            quantity: 1,
+            size: 'lrg'
+          }
+        ]
+      }      
+
+      try {
+        const design = (await axios.post('https://api.scalablepress.com/v2/design', body, {auth: { username, password }})).data;
+        console.log(design);
+        res.json(design);
+      } catch(err) {
+        res.json(err.response.data.issues);
       }
     });
-    
-    app.post('/upload', upload.single('file'), async (req, res) => {
-      try {
-        const response = await firebaseClient.uploadImageToStorage(req.file);
-        res.json({response});
-      } catch(error) {
-        res.status(500).json({error})
-      }
-    })
   }
 }

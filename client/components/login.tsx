@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 
 export const Login = () => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('kyleconkright@gmail.com');
   const [user, setUser] = useState<any>({});
 
   (function isSignedIn() {
@@ -30,8 +30,9 @@ export const Login = () => {
   }
   
   function handleLogout(event) {
-    console.log('logout');
     axios.post('http://localhost:5001/logout');
+    setUser(null);
+    setEmail('');
   }
   
   async function handleEmailSubmit(e) {
