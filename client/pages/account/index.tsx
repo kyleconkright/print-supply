@@ -10,7 +10,7 @@ const AccountPage = () => {
       async function fetchFiles() {
         try {
           const files = (await axios.get('http://localhost:5001/uploads')).data.response[0];
-          setFiles(files);
+          setFiles(files.reverse());
         } catch(err) {console.error(err)}
       }
       fetchFiles()

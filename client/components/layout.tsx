@@ -8,12 +8,12 @@ const Section = styled.section`
 
 const withLayout = Page => {
   return () => (
-    <main>
-      <Header />
-      <Section>
-        <Page />
-      </Section>
-    </main>
+      <main>
+        <Header />
+        <Section>
+          <Page />
+        </Section>
+      </main>
   );
 };
 

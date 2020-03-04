@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import Link from 'next/link';
+import { USER_LOGIN } from '../store/actions/user.actions';
 
 
 export const Login = () => {
   const [email, setEmail] = useState('kyleconkright@gmail.com');
   const [user, setUser] = useState<any>({});
+  const dispatch = useDispatch();
 
   (function isSignedIn() {
     useEffect(() => {
@@ -37,12 +40,7 @@ export const Login = () => {
   
   async function handleEmailSubmit(e) {
     e.preventDefault();
-    try {
-      await axios.post('http://localhost:5001/login', {email});
-      window.localStorage.setItem('print-supply-email', email);
-    } catch(err) {
-      console.error(err);
-    }
+    dispatch({type: USER_LOGIN, user: {email}});
   }
 
   return (

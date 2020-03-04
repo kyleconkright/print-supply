@@ -1,17 +1,18 @@
 import { useState } from 'react';
 import axios from 'axios';
 import Layout from '../components/layout';
+import { useSelector } from "react-redux";
+import { AppState } from '../store/reducers';
 
 const Page = () => {
   const [file, setFile] = useState();
   const [fileName, setFileName] = useState('Choose File');
   const [uploadedFile, setUploadedFile] = useState({});
-  
+
 
   const handleUploadChange = (e) => {
     setFile(e.target.files[0]);
     setFileName(e.target.files[0].name);
-    console.log(e.target.files[0]);
   }
 
   const handleFileUpload = async (e) => {

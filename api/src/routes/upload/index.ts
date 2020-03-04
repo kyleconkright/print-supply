@@ -22,6 +22,7 @@ export const uploadFile = async (req, res) => {
 export const getUploads = async (req, res) => {
   try {
     const response = await firebaseClient.getUploads();
+    const files =
     res.json({response});
   } catch(error) {
     res.status(500).json({error})

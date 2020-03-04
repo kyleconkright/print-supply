@@ -54,43 +54,56 @@ export class Routes {
       var username = 'user';
       var password = process.env.SCALABLE_PRESS_KEY;
 
-      const body = {
-        type: 'screenprint',
-        sides: {
-          front: {
-            artwork: req.body.url,
-            resize: true,
-            aspect: 1.008371385083714,
-            dimensions: {
-              width: 5
-            },
-            position: {
-              horizontal: "C",
-              offset: {
-                top: 2.5
-              }
-            },
-            colors: [
-              "white"
-            ]
-          }
-        },
-        products: [
-          {
-            id: 'gildan-sweatshirt-crew',
-            color: 'ash',
-            quantity: 1,
-            size: 'lrg'
-          }
-        ]
-      }      
+      
+      
+      let design;
 
       try {
-        const design = (await axios.post('https://api.scalablepress.com/v2/design', body, {auth: { username, password }})).data;
+        const body = {
+          type: 'dtg',
+          sides: {
+            front: {
+              artwork: req.body.url,
+              resize: true,
+              dimensions: {
+                width: 5
+              },
+              position: {
+                horizontal: "C",
+                offset: {
+                  top: 2.5
+                }
+              },
+            }
+          },
+          products: [
+            {
+              id: 'gildan-sweatshirt-crew',
+              color: 'ash',
+              quantity: 1,
+              size: 'lrg'
+            }
+          ]
+        }  
+        design = (await axios.post('https://api.scalablepress.com/v2/design', body, {auth: { username, password }})).data;
         console.log(design);
-        res.json(design);
       } catch(err) {
         res.json(err.response.data.issues);
+      }
+
+      
+
+      try {
+        const body = {
+          type: 'dtg',
+          designId: design.id,
+        }
+        const quote = await axios.post('https://api.scalablepress.com/v2/quote', body, {auth: { username, password }});
+        console.log(quote);
+        res.json(quote);
+      } catch(err) {
+        console.error(err);
+        res.json(err);
       }
     });
   }
