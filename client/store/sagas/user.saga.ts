@@ -6,7 +6,9 @@ import { USER_LOGIN, USER_LOGIN_SUCCESS } from '../actions/user.actions';
 function* userLogin(action) {
   try {
     const { email } = action.user;
-    const user = yield call(loginToApp, email);
+    const user = action.user;
+    yield call(loginToApp, email);
+    console.log(user);
     yield put({ type: USER_LOGIN_SUCCESS, user })
   } catch(err) {
     console.log(err);
