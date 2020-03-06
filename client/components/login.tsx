@@ -1,29 +1,19 @@
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import Link from 'next/link';
-import { USER_LOGIN } from '../store/actions/user.actions';
+import { USER_LOGIN, CHECK_FOR_LOGGED_IN_USER } from '../store/actions/user.actions';
+import { AppState } from '../store/reducers';
 
 
 export const Login = () => {
   const [email, setEmail] = useState('kyleconkright@gmail.com');
-  const [user, setUser] = useState<any>({});
+  const user = useSelector((state: AppState) => state.user);
   const dispatch = useDispatch();
 
   (function isSignedIn() {
     useEffect(() => {
-      if (window.location.href.indexOf('signIn') !== -1 && window.localStorage.getItem('print-supply-email')) {
-        const email = window.localStorage.getItem('print-supply-email');
-        try {
-          axios.post('http://localhost:5001/complete', { url: window.location.href, email })
-        } catch(err) {console.error(err)}
-      } else {
-        try {
-          axios.get('http://localhost:5001/').then((res: any) => {
-            setUser(res.data.response);
-          });
-        } catch(err) {console.error(err)}
-      }
+      dispatch({type: CHECK_FOR_LOGGED_IN_USER})
     }, []);
     return null;
   })();
@@ -34,8 +24,9 @@ export const Login = () => {
   
   function handleLogout(event) {
     axios.post('http://localhost:5001/logout');
-    setUser(null);
-    setEmail('');
+    // TODO: dispatch actionf for this
+    // setUser(null);
+    // setEmail('');
   }
   
   async function handleEmailSubmit(e) {
@@ -59,4 +50,5 @@ export const Login = () => {
     )
   )
 }
+
 
