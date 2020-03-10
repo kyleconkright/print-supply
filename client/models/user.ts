@@ -1,9 +1,10 @@
 export interface UserState {
   email: string;
-  uid: string;
-  displayName: string;
-  lastLoginAt: string
-  createdAt: string
+  uid?: string;
+  displayName?: string;
+  lastLoginAt?: string
+  createdAt?: string,
+  isLoading?: boolean,
 }
 
 export function formatUserFromApi(user) {

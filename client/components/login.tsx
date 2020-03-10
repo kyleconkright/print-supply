@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import Link from 'next/link';
-import { USER_LOGIN, CHECK_FOR_LOGGED_IN_USER } from '../store/actions/user.actions';
+import { USER_LOGIN, CHECK_FOR_LOGGED_IN_USER, USER_LOGOUT } from '../store/actions/user.actions';
 import { AppState } from '../store/reducers';
 
 
 export const Login = () => {
-  const [email, setEmail] = useState('kyleconkright@gmail.com');
+  const [email, setEmail] = useState();
   const user = useSelector((state: AppState) => state.user);
   const dispatch = useDispatch();
 
@@ -23,10 +23,7 @@ export const Login = () => {
   }
   
   function handleLogout(event) {
-    axios.post('http://localhost:5001/logout');
-    // TODO: dispatch actionf for this
-    // setUser(null);
-    // setEmail('');
+    dispatch({type: USER_LOGOUT });
   }
   
   async function handleEmailSubmit(e) {
@@ -35,7 +32,7 @@ export const Login = () => {
   }
 
   return (
-    user ? (
+    user.email ? (
       <nav>
         <Link href="/account">
           <a>{user.email}</a>
@@ -43,10 +40,14 @@ export const Login = () => {
         <a onClick={handleLogout}>Logout</a>
       </nav>
     ) : (
-      <div>
-        <input onChange={handleEmailChange} type="text" placeholder="email" />
-        <button onClick={handleEmailSubmit}>Sign In</button>
-      </div>
+      user.isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <div>
+          <input onChange={handleEmailChange} type="text" placeholder="email" />
+          <button onClick={handleEmailSubmit}>Sign In</button>
+        </div>
+      )
     )
   )
 }

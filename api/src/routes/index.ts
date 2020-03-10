@@ -16,7 +16,7 @@ export class Routes {
           })
           .catch();
       } catch (err) {
-        console.log(err);
+        console.error(err.response.data)
       }
     })
 
@@ -25,7 +25,7 @@ export class Routes {
       try {
         res.send(firebaseClient.login(email));
       } catch (error) {
-        console.log(error)
+        console.error(error.response.data)
       }
     })
    
@@ -33,7 +33,7 @@ export class Routes {
       try {
         res.send(firebaseClient.logout());
       } catch (error) {
-        console.log(error)
+        console.error(error.response.data)
       }
     })
 
@@ -43,7 +43,7 @@ export class Routes {
         const user = await firebaseClient.completeSignIn(email, url)
         res.json({user});
       } catch (err) {
-        console.log(err);
+        console.error(err.response.data)
       }
     })
     
