@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import Layout from '../components/layout';
+import { Products } from './../components/products';
 import { useSelector } from "react-redux";
 import { AppState } from '../store/reducers';
 
@@ -44,7 +45,5 @@ const Page = () => {
     </section>
   )
 };
-
-
 
 export default Layout(Page);

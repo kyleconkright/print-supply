@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import styled from 'styled-components';
 import { Login } from './login';
-// import { theme } from './../styles/theme';
-// import Menu from './menu';
 
 const StyledHeader = styled.header`
   padding: 1rem;
@@ -12,15 +10,17 @@ const StyledHeader = styled.header`
 `
 
 const Logo = styled.a`
-  font-size: 1.25rem;
-  font-weight: 500;
+  font-family: verlag;
+  font-size: 1.35rem;
+  font-weight: 600;
   color: black;
+  cursor: pointer;
 `
 
 const Header = () => (
   <StyledHeader>
     <Link href="/">
-      <Logo>Shirt Upload</Logo>
+      <Logo>Other Supply</Logo>
     </Link>
     <Login />
   </StyledHeader>

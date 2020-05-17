@@ -46,6 +46,15 @@ export class Routes {
         console.error(err.response.data)
       }
     })
+
+    app.get('/products', async (req: Request, res: Response) => {
+      try {
+        const products = await firebaseClient.getProducts();
+        res.send(products);
+      } catch(err) {
+        console.log(err);
+      }
+    });
     
     app.post('/upload', multer.single('file'), uploadFile);
     app.get('/uploads', getUploads);
@@ -53,9 +62,6 @@ export class Routes {
     app.post('/get-quote', async (req, res) => {
       var username = 'user';
       var password = process.env.SCALABLE_PRESS_KEY;
-
-      
-      
       let design;
 
       try {
@@ -90,8 +96,6 @@ export class Routes {
       } catch(err) {
         res.json(err.response.data.issues);
       }
-
-      
 
       try {
         const body = {

@@ -1,9 +1,10 @@
 import axios from 'axios';
 
 import { takeLatest, call, put } from 'redux-saga/effects';
-import { USER_LOGIN, USER_LOGIN_SUCCESS, USER_LOGOUT, SET_USER, CHECK_FOR_LOGGED_IN_USER } from '../actions/user.actions';
+import { USER_LOGIN, USER_LOGIN_SUCCESS, USER_LOGOUT, SET_USER, CHECK_FOR_LOGGED_IN_USER, USER_LOGOUT_SUCCESS } from '../actions/user.actions';
 import { formatUserFromApi } from '../../models/user';
 import { DefaultAppState } from '../reducers';
+import { DefaultUserState } from '../reducers/user.reducer';
 
 function* checkForLoggedInUser() {
   try {
@@ -48,7 +49,7 @@ async function loginToApp(email) {
 function* userLogout() {
   try {
     yield call(() => axios.post('http://localhost:5001/logout'));
-    yield put({ type: SET_USER, user: null })
+    yield put({ type: USER_LOGOUT_SUCCESS, user: DefaultUserState})
   } catch (err) {
     console.log(err);
   }

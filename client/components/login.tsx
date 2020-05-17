@@ -35,18 +35,21 @@ export const Login = () => {
     user.email ? (
       <nav>
         <Link href="/account">
-          <a>{user.email}</a>
+          <a>account</a>
         </Link>
-        <a onClick={handleLogout}>Logout</a>
       </nav>
     ) : (
       user.isLoading ? (
-        <p>Loading...</p>
+        <span>Loading...</span>
       ) : (
+        !user.emailVerified && user.emailSent ? (
+          <span>Check Your Email</span>
+        ) : (
         <div>
           <input onChange={handleEmailChange} type="text" placeholder="email" />
           <button onClick={handleEmailSubmit}>Sign In</button>
         </div>
+          )
       )
     )
   )

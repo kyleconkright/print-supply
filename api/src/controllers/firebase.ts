@@ -1,15 +1,21 @@
-import * as firebase from "firebase";
+import * as firebase from 'firebase';
+import * as admin from 'firebase-admin';
 import { firebaseConfig, actionCodeSettings } from './../../config';
 import { Storage } from '@google-cloud/storage';
 import { format } from "url";
 
-export class FirebaseClient {
-  private app: firebase.app.App
+const keyFilename = './../api/other-print-supply-1df0fa2b6e7c.json';
 
+export class FirebaseClient {
+  private app: firebase.app.App;
+  private db: firebase.firestore.Firestore;
 
   constructor() {
     if (!firebase.apps.length) {
       this.app = firebase.initializeApp(firebaseConfig);
+      this.db = this.app.firestore();
+    }  else {
+      this.db = firebase.firestore();
     }
   }
 
@@ -37,7 +43,6 @@ export class FirebaseClient {
 
   async uploadImageToStorage(file: any) {
     const projectId = process.env.GOOGLE_PROJECT_ID;
-    const keyFilename = './../api/other-print-supply-1df0fa2b6e7c.json';
     const storage = new Storage({ projectId, keyFilename });
     const bucket = storage.bucket(process.env.GOOGLE_STORAGE_BUCKET);
     let user;
@@ -80,7 +85,6 @@ export class FirebaseClient {
 
   async getUploads() {
     const projectId = process.env.GOOGLE_PROJECT_ID;
-    const keyFilename = './../api/other-print-supply-1df0fa2b6e7c.json';
     const storage = new Storage({ projectId, keyFilename });
     const bucket = storage.bucket(process.env.GOOGLE_STORAGE_BUCKET);
     let user;
@@ -91,5 +95,14 @@ export class FirebaseClient {
 
     const files = await bucket.getFiles({prefix: `${user.uid}`});
     return files;
+  }
+
+  async addProductsToFirebase(data) {
+    this.db.collection('/products').doc(data.productId).set(data);
+  }
+  
+  async getProducts() {
+    const results = (await this.db.collection('/products').doc('american-apparel-unisex-fine-jersey-pocket-t-shirt').get()).data();
+    return results;
   }
 }

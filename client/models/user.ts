@@ -5,6 +5,8 @@ export interface UserState {
   lastLoginAt?: string
   createdAt?: string,
   isLoading?: boolean,
+  emailVerified?: boolean,
+  emailSent?: boolean,
 }
 
 export function formatUserFromApi(user) {
@@ -14,5 +16,6 @@ export function formatUserFromApi(user) {
     displayName: user.displayName,
     lastLoginAt: user.lastLoginAt,
     createdAt: user.createdAt,
+    emailVerified: user.emailVerified,
   }
 }
