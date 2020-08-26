@@ -1,3 +1,6 @@
 export interface ProductsState {
-  list: [];
+  list: {
+    description: string;
+    colors: [];
+  };
 }

@@ -1,53 +1,46 @@
-import Layout from './../../components/layout';
-import axios from 'axios';
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { USER_LOGOUT } from '../../store/actions/user.actions';
+import Layout from './../../components/layouts/layout';
+import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store/reducers';
+import { OtherInput } from '../../components/form/input';
+import styled from 'styled-components';
+import axios from 'axios';
+import { USER_UPDATE } from '../../store/actions/user.actions';
+import { useState } from 'react';
 
-const AccountPage = () => {
-  const dispatch = useDispatch();
+const Section = styled.section`
+  padding: 16px;
+`
+
+const Account = () => {
   const user = useSelector((state: AppState) => state.user);
-  const [files, setFiles] = useState(null);
-  const [file, setFile] = useState(null);
+  const [userUpdate, setUserUpdate] = useState(user); 
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    async function fetchFiles() {
-      try {
-        const files = (await axios.get('http://localhost:5001/uploads')).data.response[0];
-        setFiles(files.reverse());
-      } catch(err) {console.error(err)}
+  const updateUserDisplayName = (event) => {
+    setUserUpdate({displayName: event.target.value} as any)
+  }
+
+  const handleAccountUpdate = async (e) => {
+    console.log(e);
+    e.preventDefault();
+    try {
+      const res = await axios.post('http://localhost:5001/user/update', {user: userUpdate });
+      const user = JSON.parse(res.config.data).user;
+      dispatch({type: USER_UPDATE, user });
+    } catch(err) {
+      console.error(err);
     }
-    fetchFiles()
-  }, []);
-
-  function handleLogout(event) {
-    dispatch({type: USER_LOGOUT });
   }
-
-  const getQuote = (file) => {
-    console.log(file);
-    axios.post('http://localhost:5001/get-quote', {url: file.metadata.mediaLink});
-  }
-
 
   return (
-    <section>
-      <h1>{ user.email }</h1>
-      <a onClick={handleLogout}>Logout</a>
-      <p>TODO: LIST ALL THE PRODUCT OPTIONS FROM SCALABLE. REFERENCE COTTON BUREAU. USE IMAGEMAGICK</p>
-      {
-        files ? files.map((file, i) => {
-          return (
-            <div key={i} onClick={() => getQuote(file)}>
-              <img style={{ height: '200px' }} src={file.metadata.mediaLink}></img>
-              <p key={i}>{file.name.split(/__(.*)/)[1]}</p>
-            </div>
-          )
-        }) : null
-      }
-    </section>
+    <Section>
+      { user.displayName ? user.displayName : user.email }
+      <div>
+        <OtherInput placeholder="name" onChange={updateUserDisplayName}></OtherInput>
+      </div>
+      <button onClick={handleAccountUpdate}>Update</button>
+    </Section>
   )
 }
 
-export default Layout(AccountPage);
+export default Layout(Account)

@@ -1,47 +1,22 @@
-import { useState } from 'react';
-import axios from 'axios';
-import Layout from '../components/layout';
-import { Products } from './../components/products';
-import { useSelector } from "react-redux";
-import { AppState } from '../store/reducers';
+import Layout from '../components/layouts/layout';
+import styled from 'styled-components';
+
+const Background = 'https://oo-prod.s3.amazonaws.com/public/artworks/2018/07/09/217ac8f72aafd3e5/artworkRaster/original.png'
+
+const HeroDiv = styled.div`
+  width: 50%;
+  background-size: cover;
+  background-position: center;
+  min-height: calc(100vh - 57px);
+  background-image: url('${Background}');
+`
 
 const Page = () => {
-  const [file, setFile] = useState();
-  const [fileName, setFileName] = useState('Choose File');
-  const [uploadedFile, setUploadedFile] = useState({});
-
-
-  const handleUploadChange = (e) => {
-    setFile(e.target.files[0]);
-    setFileName(e.target.files[0].name);
-  }
-
-  const handleFileUpload = async (e) => {
-    e.preventDefault();
-    const form = new FormData();
-    form.append('file', file);
-    try {
-      const res = await axios.post('http://localhost:5001/upload', form, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      const { fileName, filePath } = res.data;
-      setUploadedFile({ fileName, filePath });
-    } catch(err) {
-      console.log(err);
-    }
-  }
 
   return (
     <section>
-      <div>
-        <label htmlFor="uploadFile">
-          {fileName}
-          <input onChange={handleUploadChange} name="upload" id="uploadFile" type="file" />
-          <button onClick={handleFileUpload}>Upload</button>
-        </label>
-      </div>
+      <HeroDiv></HeroDiv>
+      <div></div>
     </section>
   )
 };

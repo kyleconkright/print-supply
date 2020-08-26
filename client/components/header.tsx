@@ -17,12 +17,22 @@ const Logo = styled.a`
   cursor: pointer;
 `
 
+const Nav = styled.nav`
+  display: flex;
+  align-items: center;
+`
+
 const Header = () => (
   <StyledHeader>
     <Link href="/">
       <Logo>Other Supply</Logo>
     </Link>
-    <Login />
+    <Nav>
+      <Login />
+      <Link href="../order/create">
+        <a>Order</a>
+      </Link>
+    </Nav>
   </StyledHeader>
 );
 

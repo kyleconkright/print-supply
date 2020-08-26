@@ -1,22 +1,25 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import Link from 'next/link';
 import { USER_LOGIN, CHECK_FOR_LOGGED_IN_USER, USER_LOGOUT } from '../store/actions/user.actions';
 import { AppState } from '../store/reducers';
-
+import { UserContext } from './../components/contexts/auth-context';
 
 export const Login = () => {
   const [email, setEmail] = useState();
   const user = useSelector((state: AppState) => state.user);
   const dispatch = useDispatch();
+  const userContext = useContext(UserContext);
 
-  (function isSignedIn() {
-    useEffect(() => {
-      dispatch({type: CHECK_FOR_LOGGED_IN_USER})
-    }, []);
-    return null;
-  })();
+  useEffect(() => {
+    async function isSignedIn() {
+      dispatch({ type: CHECK_FOR_LOGGED_IN_USER });
+      userContext.login(!!user.email);
+    }
+    isSignedIn();
+  }, []);
+
 
   function handleEmailChange(event) {
     setEmail(event.target.value);

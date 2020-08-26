@@ -7,18 +7,22 @@ import { GET_PRODUCTS } from '../store/actions/products.actions';
 
 
 export const Products = () => {
-  const user = useSelector((state: AppState) => state.products);
+  const products = useSelector((state: AppState) => state.products.list);
   const dispatch = useDispatch();
 
   (function isSignedIn() {
     useEffect(() => {
-      dispatch({type: GET_PRODUCTS})
+      dispatch({type: GET_PRODUCTS})  
     }, []);
     return null;
   })();
 
   return (
-    <p>Products</p>
+    <div>
+      <p>Products</p>
+      { products.description }
+      { products.colors.map((product: any) => product.name ) } 
+    </div>
   )
 }
 

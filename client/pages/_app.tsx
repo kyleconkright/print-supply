@@ -1,10 +1,13 @@
 import { Provider } from "react-redux";
+import UserContextProvider from './../components/contexts/auth-context';
 import store from './../store';
 
 function PrintSupplyApp({ Component, pageProps }) {
   return (
     <Provider store={store}>
-      <Component {...pageProps} />
+      <UserContextProvider>
+        <Component {...pageProps} />
+      </UserContextProvider>
     </Provider>
   )
 }
