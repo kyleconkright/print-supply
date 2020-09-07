@@ -12,11 +12,11 @@ export class ScalablePressClient {
   }
 
   async getProducts() {
-    try {
-      const products: AxiosResponse = (await axios('https://api.scalablepress.com/v3/products/american-apparel-unisex-fine-jersey-pocket-t-shirt')).data;
-      this.firebase.addProductsToFirebase(products); 
-    } catch(err) {
-      console.log(err);
-    }
+    // try {
+    //   const products: AxiosResponse = (await axios('https://api.scalablepress.com/v3/products/american-apparel-unisex-fine-jersey-pocket-t-shirt')).data;
+    //   this.firebase.addProductsToFirebase(products); 
+    // } catch(err) {
+    //   console.log(err);
+    // }
   }
 }

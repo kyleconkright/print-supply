@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { FirebaseClient } from "./../controllers/firebase";
-import { multer, uploadFile, getUploads } from "./upload";
 import axios from 'axios';
-import * as btoa from 'btoa';
+import { multer, uploadFile, getUploads } from "./upload";
+import { updateUser } from "./user";
 
 const firebaseClient = new FirebaseClient()
 
@@ -36,6 +36,8 @@ export class Routes {
         console.error(error.response.data)
       }
     })
+
+    app.post('/user/update', updateUser);
 
     app.post('/complete', async (req: Request, res: Response) => {
       const { url, email } = req.body;

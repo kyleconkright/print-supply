@@ -2,7 +2,8 @@ import * as firebase from 'firebase';
 import * as admin from 'firebase-admin';
 import { firebaseConfig, actionCodeSettings } from './../../config';
 import { Storage } from '@google-cloud/storage';
-import { format } from "url";
+import { format } from "url"
+import { userInfo } from 'os';
 
 const keyFilename = './../api/other-print-supply-1df0fa2b6e7c.json';
 
@@ -28,7 +29,31 @@ export class FirebaseClient {
   }
 
   async isLoggedIn() {
-    return await firebase.auth().currentUser;
+    const user =  await firebase.auth().currentUser;
+    const more = await (await this.db.collection('users').doc('uvaVF191sEYpHkuX5iMRQ8HyqDg1').get()).data();
+    try {
+      const all = await Promise.all([user, more]);
+      return all;
+    } catch(err) {
+      console.error(err);
+    }
+  }
+  
+  async updateUser(user) {
+    const currentUser = await firebase.auth().currentUser;
+    try {
+      const {address, ...userData} = user;
+      const {displayName, email, ...dump} = userData;
+      const updatedUser: any = await firebase.auth().currentUser.updateProfile(userData);
+      try {
+        return await this.db.collection('users').doc(currentUser.uid).set({displayName, email, address});
+      } catch(err) {
+        console.error(err);
+      }
+      return updatedUser;
+    } catch(err) {
+      console.error(err);
+    }
   }
 
   async completeSignIn(email: string, url: string) {
@@ -102,7 +127,19 @@ export class FirebaseClient {
   }
   
   async getProducts() {
-    const results = (await this.db.collection('/products').doc('american-apparel-unisex-fine-jersey-pocket-t-shirt').get()).data();
+    const results = (await this.db.collection('/products').doc('test-print-001').get()).data();
+    console.log(results);
     return results;
+  }
+}
+
+function formatUserFromApi(user) {
+  return {
+    email: user.email,
+    uid: user.uid,
+    displayName: user.displayName,
+    lastLoginAt: user.lastLoginAt,
+    createdAt: user.createdAt,
+    emailVerified: user.emailVerified,
   }
 }
