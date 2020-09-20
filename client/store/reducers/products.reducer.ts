@@ -1,5 +1,4 @@
 import { GET_PRODUCTS, SET_PRODUCTS } from "../actions/products.actions";
-import { UserState } from "../../models/user";
 import { ProductsState } from "../../models/products";
 
 export const DefaultProductsState: ProductsState = {

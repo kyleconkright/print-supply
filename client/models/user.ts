@@ -7,9 +7,18 @@ export interface UserState {
   isLoading?: boolean,
   emailVerified?: boolean,
   emailSent?: boolean,
+  address?: Address,
 }
 
-export function formatUserFromApi(user) {
+interface Address {
+  street1: string;
+  street2: string;
+  city: string;
+  state: string;
+  zip: string;
+}
+
+export function formatUserFromApi([user, more]) {
   return {
     email: user.email,
     uid: user.uid,
@@ -17,5 +26,6 @@ export function formatUserFromApi(user) {
     lastLoginAt: user.lastLoginAt,
     createdAt: user.createdAt,
     emailVerified: user.emailVerified,
+    address: more.address,
   }
 }
